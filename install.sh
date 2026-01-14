@@ -597,7 +597,7 @@ echo -e "${GREEN}╚════════════════════
 echo ""
 echo -e "${BOLD}下一步：${NC}"
 echo ""
-echo "  1. 重啟 Claude Code（或開新終端機執行 ${CYAN}claude${NC}）"
+echo -e "  1. 重啟 Claude Code（或開新終端機執行 ${CYAN}claude${NC}）"
 echo ""
 echo "  2. 試試看這些指令："
 echo -e "     ${CYAN}/generate 一隻可愛的貓咪${NC}"
