@@ -431,15 +431,15 @@ echo ""
 
 if [ -n "${NANOBANANA_GEMINI_API_KEY:-}" ]; then
     echo -e "偵測到現有的 API Key: ${YELLOW}${NANOBANANA_GEMINI_API_KEY:0:10}...${NC}"
-    read -p "使用現有的 API Key? [Y/n] " use_existing
+    read -p "使用現有的 API Key? [Y/n] " use_existing < /dev/tty
     if [[ "$use_existing" =~ ^[Nn] ]]; then
         show_api_key_guide
-        read -p "請輸入新的 Gemini API Key: " NANOBANANA_GEMINI_API_KEY
+        read -p "請輸入新的 Gemini API Key: " NANOBANANA_GEMINI_API_KEY < /dev/tty
     fi
 else
     echo "尚未設定 Gemini API Key。"
     echo ""
-    read -p "是否需要查看取得 API Key 的詳細說明？[Y/n] " show_guide
+    read -p "是否需要查看取得 API Key 的詳細說明？[Y/n] " show_guide < /dev/tty
     if [[ ! "$show_guide" =~ ^[Nn] ]]; then
         show_api_key_guide
     else
@@ -447,7 +447,7 @@ else
         echo "請前往 https://aistudio.google.com/apikey 取得 API Key"
         echo ""
     fi
-    read -p "請輸入 Gemini API Key: " NANOBANANA_GEMINI_API_KEY
+    read -p "請輸入 Gemini API Key: " NANOBANANA_GEMINI_API_KEY < /dev/tty
 fi
 
 # Validate API Key
@@ -459,7 +459,7 @@ fi
 if [[ ! "$NANOBANANA_GEMINI_API_KEY" =~ ^AIza ]]; then
     echo ""
     warn "API Key 格式可能不正確（通常以 'AIza' 開頭）"
-    read -p "是否仍要繼續？[y/N] " continue_anyway
+    read -p "是否仍要繼續？[y/N] " continue_anyway < /dev/tty
     if [[ ! "$continue_anyway" =~ ^[Yy] ]]; then
         echo ""
         echo "請重新執行安裝腳本並輸入正確的 API Key。"
@@ -479,7 +479,7 @@ echo "可用模型："
 echo -e "  ${GREEN}1)${NC} gemini-3-pro-image-preview ${YELLOW}(Nano Banana Pro，預設，品質較好)${NC}"
 echo -e "  ${GREEN}2)${NC} gemini-2.5-flash-image ${YELLOW}(較快速)${NC}"
 echo ""
-read -p "請選擇 [1-2，按 Enter 使用預設]: " model_choice
+read -p "請選擇 [1-2，按 Enter 使用預設]: " model_choice < /dev/tty
 
 case "$model_choice" in
     2) NANOBANANA_MODEL="gemini-2.5-flash-image" ;;
@@ -571,7 +571,7 @@ esac
 echo "是否將環境變數加入 $SHELL_RC？"
 echo "（這樣未來重新安裝時可以自動偵測 API Key）"
 echo ""
-read -p "加入環境變數? [y/N] " add_to_shell
+read -p "加入環境變數? [y/N] " add_to_shell < /dev/tty
 
 if [[ "$add_to_shell" =~ ^[Yy] ]]; then
     if grep -q "NANOBANANA_GEMINI_API_KEY" "$SHELL_RC" 2>/dev/null; then
