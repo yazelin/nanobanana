@@ -500,10 +500,24 @@ info "移除舊的設定（如果存在）..."
 claude mcp remove nanobanana 2>/dev/null || true
 
 info "加入 MCP Server..."
-if ! claude mcp add nanobanana \
+MCP_OUTPUT=$(claude mcp add nanobanana \
     -e NANOBANANA_GEMINI_API_KEY="$NANOBANANA_GEMINI_API_KEY" \
     -e NANOBANANA_MODEL="$NANOBANANA_MODEL" \
-    -- npx -y @willh/nano-banana-mcp 2>/dev/null; then
+    -- npx -y @willh/nano-banana-mcp 2>&1)
+
+if [ $? -ne 0 ]; then
+    error_msg "MCP Server 設定失敗"
+    echo ""
+    echo -e "${YELLOW}錯誤訊息：${NC}"
+    echo "$MCP_OUTPUT"
+    echo ""
+    show_mcp_setup_failed_guide
+fi
+
+# 驗證 MCP 是否已加入
+if ! claude mcp list 2>/dev/null | grep -q "nanobanana"; then
+    error_msg "MCP Server 未成功加入"
+    echo ""
     show_mcp_setup_failed_guide
 fi
 

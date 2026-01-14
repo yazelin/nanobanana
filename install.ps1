@@ -496,18 +496,32 @@ Write-Host "----------------------------------------------------------------"
 Write-Host ""
 
 Write-Info "移除舊的設定（如果存在）..."
-try { claude mcp remove nanobanana 2>$null } catch {}
+$null = claude mcp remove nanobanana 2>&1
 
 Write-Info "加入 MCP Server..."
-try {
-    claude mcp add nanobanana `
-        -e NANOBANANA_GEMINI_API_KEY="$apiKey" `
-        -e NANOBANANA_MODEL="$model" `
-        -- npx -y @willh/nano-banana-mcp
-    Write-Success "MCP Server 已設定"
-} catch {
+$mcpResult = claude mcp add nanobanana `
+    -e NANOBANANA_GEMINI_API_KEY="$apiKey" `
+    -e NANOBANANA_MODEL="$model" `
+    -- npx -y @willh/nano-banana-mcp 2>&1
+
+if ($LASTEXITCODE -ne 0) {
+    Write-Error2 "MCP Server 設定失敗"
+    Write-Host ""
+    Write-Host "錯誤訊息：" -ForegroundColor Yellow
+    Write-Host $mcpResult
+    Write-Host ""
     Show-McpSetupFailedGuide
 }
+
+# 驗證 MCP 是否已加入
+$mcpList = claude mcp list 2>&1
+if ($mcpList -notmatch "nanobanana") {
+    Write-Error2 "MCP Server 未成功加入"
+    Write-Host ""
+    Show-McpSetupFailedGuide
+}
+
+Write-Success "MCP Server 已設定"
 
 Write-Host ""
 
