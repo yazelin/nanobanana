@@ -499,13 +499,16 @@ Write-Info "移除舊的設定（如果存在）..."
 $null = claude mcp remove nanobanana 2>&1
 
 Write-Info "加入 MCP Server..."
-$mcpResult = claude mcp add nanobanana `
-    -e NANOBANANA_GEMINI_API_KEY="$apiKey" `
-    -e NANOBANANA_MODEL="$model" `
-    -- npx -y @willh/nano-banana-mcp 2>&1
 
-if ($LASTEXITCODE -ne 0) {
-    Write-Error2 "MCP Server 設定失敗"
+# 構建並執行命令
+$addCmd = "claude mcp add nanobanana -e NANOBANANA_GEMINI_API_KEY=`"$apiKey`" -e NANOBANANA_MODEL=`"$model`" -- npx -y @willh/nano-banana-mcp"
+Write-Host "  執行: claude mcp add nanobanana ..." -ForegroundColor Gray
+
+$mcpResult = Invoke-Expression $addCmd 2>&1
+$addExitCode = $LASTEXITCODE
+
+if ($addExitCode -ne 0) {
+    Write-Error2 "MCP Server 設定失敗 (exit code: $addExitCode)"
     Write-Host ""
     Write-Host "錯誤訊息：" -ForegroundColor Yellow
     Write-Host $mcpResult
@@ -513,15 +516,35 @@ if ($LASTEXITCODE -ne 0) {
     Show-McpSetupFailedGuide
 }
 
-# 驗證 MCP 是否已加入
-$mcpList = claude mcp list 2>&1
-if ($mcpList -notmatch "nanobanana") {
-    Write-Error2 "MCP Server 未成功加入"
-    Write-Host ""
-    Show-McpSetupFailedGuide
-}
+# 短暫等待讓設定生效
+Start-Sleep -Milliseconds 500
 
-Write-Success "MCP Server 已設定"
+# 驗證 MCP 是否已加入
+Write-Host "  驗證設定..." -ForegroundColor Gray
+$mcpList = claude mcp list 2>&1
+$listExitCode = $LASTEXITCODE
+
+if ($listExitCode -ne 0) {
+    Write-Warn "無法執行 claude mcp list (exit code: $listExitCode)"
+    Write-Host "  輸出: $mcpList" -ForegroundColor Gray
+    Write-Host ""
+    Write-Host "請手動驗證是否已加入成功：" -ForegroundColor Yellow
+    Write-Host "  claude mcp list"
+    Write-Host ""
+} elseif ($mcpList -match "nanobanana") {
+    Write-Success "MCP Server 已設定並驗證成功"
+} else {
+    Write-Warn "MCP Server 可能未成功加入"
+    Write-Host "  claude mcp list 輸出:" -ForegroundColor Gray
+    Write-Host $mcpList
+    Write-Host ""
+    Write-Host "請手動驗證：" -ForegroundColor Yellow
+    Write-Host "  claude mcp list"
+    Write-Host ""
+    Write-Host "如果沒有看到 nanobanana，請手動執行：" -ForegroundColor Yellow
+    Write-Host "  $addCmd"
+    Write-Host ""
+}
 
 Write-Host ""
 

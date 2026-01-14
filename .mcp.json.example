@@ -4,7 +4,7 @@
       "command": "npx",
       "args": ["-y", "@willh/nano-banana-mcp"],
       "env": {
-        "GOOGLE_API_KEY": "${GOOGLE_API_KEY}",
+        "NANOBANANA_GEMINI_API_KEY": "${NANOBANANA_GEMINI_API_KEY}",
         "NANOBANANA_MODEL": "${NANOBANANA_MODEL}"
       }
     }
