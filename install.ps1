@@ -80,13 +80,9 @@ function Do-Uninstall {
 
     # Remove commands
     Write-Info "移除 Commands..."
-    $commandsDir = Join-Path $env:USERPROFILE ".claude\commands"
-    $commands = @("nanobanana", "generate", "edit", "restore", "icon", "pattern", "story", "diagram")
-    foreach ($cmd in $commands) {
-        $cmdPath = Join-Path $commandsDir "$cmd.md"
-        if (Test-Path $cmdPath) {
-            Remove-Item $cmdPath -Force
-        }
+    $commandsDir = Join-Path $env:USERPROFILE ".claude\commands\nanobanana"
+    if (Test-Path $commandsDir) {
+        Remove-Item $commandsDir -Recurse -Force
     }
     Write-Success "Commands 已移除"
 
@@ -345,11 +341,11 @@ function Show-CommandsDownloadFailedGuide {
     Write-Host ""
     Write-Host "  步驟 1：複製 commands 資料夾"
     Write-Host "  git clone https://github.com/yazelin/nanobanana.git C:\temp\nanobanana"
-    Write-Host "  Copy-Item C:\temp\nanobanana\commands\* `$env:USERPROFILE\.claude\commands\"
+    Write-Host "  Copy-Item -Recurse C:\temp\nanobanana\commands\nanobanana `$env:USERPROFILE\.claude\commands\"
     Write-Host "  Remove-Item -Recurse C:\temp\nanobanana"
     Write-Host ""
     Write-Host "  或直接從 GitHub 下載："
-    Write-Host "  https://github.com/yazelin/nanobanana/tree/main/commands"
+    Write-Host "  https://github.com/yazelin/nanobanana/tree/main/commands/nanobanana"
     Write-Host ""
     Write-Host "================================================================" -ForegroundColor Yellow
     Write-Host ""
@@ -555,12 +551,12 @@ Write-Host "安裝 Commands" -ForegroundColor White
 Write-Host "----------------------------------------------------------------"
 Write-Host ""
 
-$commandsDir = Join-Path $env:USERPROFILE ".claude\commands"
+$commandsDir = Join-Path $env:USERPROFILE ".claude\commands\nanobanana"
 if (-not (Test-Path $commandsDir)) {
     New-Item -ItemType Directory -Path $commandsDir -Force | Out-Null
 }
 
-$repoUrl = "https://raw.githubusercontent.com/yazelin/nanobanana/main/commands"
+$repoUrl = "https://raw.githubusercontent.com/yazelin/nanobanana/main/commands/nanobanana"
 $commands = @("nanobanana", "generate", "edit", "restore", "icon", "pattern", "story", "diagram")
 $downloadFailed = $false
 
@@ -568,7 +564,7 @@ foreach ($cmd in $commands) {
     $cmdPath = Join-Path $commandsDir "$cmd.md"
     try {
         Invoke-WebRequest -Uri "$repoUrl/$cmd.md" -OutFile $cmdPath -ErrorAction Stop
-        Write-Success "已安裝 /$cmd"
+        Write-Success "已安裝 /nanobanana:$cmd"
     } catch {
         Write-Warn "無法下載 $cmd.md"
         $downloadFailed = $true
@@ -619,19 +615,19 @@ Write-Host "）"
 Write-Host ""
 Write-Host "  2. 試試看這些指令："
 Write-Host "     " -NoNewline
-Write-Host "/generate 一隻可愛的貓咪" -ForegroundColor Cyan
+Write-Host "/nanobanana:generate 一隻可愛的貓咪" -ForegroundColor Cyan
 Write-Host "     " -NoNewline
-Write-Host "/nanobanana 幫我做一張早安圖" -ForegroundColor Cyan
+Write-Host "/nanobanana:nanobanana 幫我做一張早安圖" -ForegroundColor Cyan
 Write-Host ""
 Write-Host "可用指令：" -ForegroundColor White
-Write-Host "  /nanobanana  - 自然語言介面"
-Write-Host "  /generate    - 生成圖片"
-Write-Host "  /edit        - 編輯圖片"
-Write-Host "  /restore     - 修復圖片"
-Write-Host "  /icon        - 生成圖標"
-Write-Host "  /pattern     - 生成圖案"
-Write-Host "  /story       - 生成故事序列"
-Write-Host "  /diagram     - 生成流程圖"
+Write-Host "  /nanobanana:nanobanana  - 自然語言介面"
+Write-Host "  /nanobanana:generate    - 生成圖片"
+Write-Host "  /nanobanana:edit        - 編輯圖片"
+Write-Host "  /nanobanana:restore     - 修復圖片"
+Write-Host "  /nanobanana:icon        - 生成圖標"
+Write-Host "  /nanobanana:pattern     - 生成圖案"
+Write-Host "  /nanobanana:story       - 生成故事序列"
+Write-Host "  /nanobanana:diagram     - 生成流程圖"
 Write-Host ""
 Write-Host "更多資訊：" -ForegroundColor White
 Write-Host "  GitHub: https://github.com/yazelin/nanobanana"

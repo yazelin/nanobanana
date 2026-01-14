@@ -60,7 +60,7 @@ claude mcp add nanobanana \
 
 # 3. 複製 Commands
 git clone https://github.com/yazelin/nanobanana.git
-cp -r nanobanana/commands/* ~/.claude/commands/
+cp -r nanobanana/commands/nanobanana ~/.claude/commands/
 
 # 4. 重啟 Claude Code
 claude
@@ -107,7 +107,7 @@ claude mcp add nanobanana `
 
 # 3. 複製 Commands
 git clone https://github.com/yazelin/nanobanana.git
-Copy-Item nanobanana\commands\* $env:USERPROFILE\.claude\commands\
+Copy-Item -Recurse nanobanana\commands\nanobanana $env:USERPROFILE\.claude\commands\
 
 # 4. 重啟 Claude Code
 claude
@@ -119,41 +119,41 @@ claude
 
 | 指令 | 說明 |
 |------|------|
-| `/nanobanana` | 自然語言介面，自動選擇適當工具 |
-| `/generate` | 從文字生成圖片 |
-| `/edit` | 編輯現有圖片 |
-| `/restore` | 修復或增強圖片 |
-| `/icon` | 生成 App 圖標、favicon |
-| `/pattern` | 生成無縫圖案、紋理 |
-| `/story` | 生成視覺故事序列 |
-| `/diagram` | 生成技術流程圖 |
+| `/nanobanana:nanobanana` | 自然語言介面，自動選擇適當工具 |
+| `/nanobanana:generate` | 從文字生成圖片 |
+| `/nanobanana:edit` | 編輯現有圖片 |
+| `/nanobanana:restore` | 修復或增強圖片 |
+| `/nanobanana:icon` | 生成 App 圖標、favicon |
+| `/nanobanana:pattern` | 生成無縫圖案、紋理 |
+| `/nanobanana:story` | 生成視覺故事序列 |
+| `/nanobanana:diagram` | 生成技術流程圖 |
 
 ### 使用範例
 
 ```bash
 # 生成圖片
-/generate 一隻可愛的貓咪在玩毛線 --styles=watercolor --resolution=2K
+/nanobanana:generate 一隻可愛的貓咪在玩毛線 --styles=watercolor --resolution=2K
 
 # 生成多張圖片
-/generate 山景 --count=4 --variations=lighting,season
+/nanobanana:generate 山景 --count=4 --variations=lighting,season
 
 # 編輯圖片
-/edit photo.jpg "在天空加上彩虹"
+/nanobanana:edit photo.jpg "在天空加上彩虹"
 
 # 生成圖標
-/icon 簡約風格的音樂 App 圖標 --sizes=64,128,256,512
+/nanobanana:icon 簡約風格的音樂 App 圖標 --sizes=64,128,256,512
 
 # 生成圖案
-/pattern 幾何三角形 --style=tech --colors=duotone
+/nanobanana:pattern 幾何三角形 --style=tech --colors=duotone
 
 # 生成故事序列
-/story "花從種子到盛開的過程" --steps=6
+/nanobanana:story "花從種子到盛開的過程" --steps=6
 
 # 生成流程圖
-/diagram "用戶認證流程" --type=flowchart
+/nanobanana:diagram "用戶認證流程" --type=flowchart
 
 # 自然語言（自動選擇工具）
-/nanobanana 幫我做一個咖啡店的專業 logo
+/nanobanana:nanobanana 幫我做一個咖啡店的專業 logo
 ```
 
 ### 常用選項
@@ -208,7 +208,7 @@ claude
 claude mcp remove nanobanana
 
 # 移除 commands
-rm -f ~/.claude/commands/{nanobanana,generate,edit,restore,icon,pattern,story,diagram}.md
+rm -rf ~/.claude/commands/nanobanana
 
 # 移除環境變數（手動從 ~/.bashrc 或 ~/.zshrc 移除）
 ```
@@ -226,9 +226,7 @@ rm -f ~/.claude/commands/{nanobanana,generate,edit,restore,icon,pattern,story,di
 claude mcp remove nanobanana
 
 # 移除 commands
-Remove-Item $env:USERPROFILE\.claude\commands\nanobanana.md
-Remove-Item $env:USERPROFILE\.claude\commands\generate.md
-# ... 其他 commands
+Remove-Item -Recurse $env:USERPROFILE\.claude\commands\nanobanana
 
 # 移除環境變數
 [Environment]::SetEnvironmentVariable("NANOBANANA_GEMINI_API_KEY", $null, "User")

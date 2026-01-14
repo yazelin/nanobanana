@@ -71,11 +71,10 @@ do_uninstall() {
 
     # Remove commands
     info "移除 Commands..."
-    COMMANDS_DIR="$HOME/.claude/commands"
-    COMMANDS=("nanobanana" "generate" "edit" "restore" "icon" "pattern" "story" "diagram")
-    for cmd in "${COMMANDS[@]}"; do
-        rm -f "$COMMANDS_DIR/$cmd.md" 2>/dev/null
-    done
+    COMMANDS_DIR="$HOME/.claude/commands/nanobanana"
+    if [ -d "$COMMANDS_DIR" ]; then
+        rm -rf "$COMMANDS_DIR" 2>/dev/null
+    fi
     success "Commands 已移除"
 
     echo ""
@@ -352,11 +351,11 @@ show_commands_download_failed_guide() {
     echo ""
     echo "  步驟 1：複製 commands 資料夾"
     echo "  git clone https://github.com/yazelin/nanobanana.git /tmp/nanobanana"
-    echo "  cp -r /tmp/nanobanana/commands/* ~/.claude/commands/"
+    echo "  cp -r /tmp/nanobanana/commands/nanobanana ~/.claude/commands/"
     echo "  rm -rf /tmp/nanobanana"
     echo ""
     echo "  或直接從 GitHub 下載："
-    echo "  https://github.com/yazelin/nanobanana/tree/main/commands"
+    echo "  https://github.com/yazelin/nanobanana/tree/main/commands/nanobanana"
     echo ""
     echo -e "${YELLOW}════════════════════════════════════════════════════════════════${NC}"
     echo ""
@@ -531,16 +530,16 @@ echo -e "${BOLD}安裝 Commands${NC}"
 echo "────────────────────────────────────────────────────────────────"
 echo ""
 
-COMMANDS_DIR="$HOME/.claude/commands"
+COMMANDS_DIR="$HOME/.claude/commands/nanobanana"
 mkdir -p "$COMMANDS_DIR"
 
-REPO_URL="https://raw.githubusercontent.com/yazelin/nanobanana/main/commands"
+REPO_URL="https://raw.githubusercontent.com/yazelin/nanobanana/main/commands/nanobanana"
 COMMANDS=("nanobanana" "generate" "edit" "restore" "icon" "pattern" "story" "diagram")
 DOWNLOAD_FAILED=0
 
 for cmd in "${COMMANDS[@]}"; do
     if curl -fsSL "$REPO_URL/$cmd.md" -o "$COMMANDS_DIR/$cmd.md" 2>/dev/null; then
-        success "已安裝 /$cmd"
+        success "已安裝 /nanobanana:$cmd"
     else
         warn "無法下載 $cmd.md"
         DOWNLOAD_FAILED=1
@@ -600,18 +599,18 @@ echo ""
 echo -e "  1. 重啟 Claude Code（或開新終端機執行 ${CYAN}claude${NC}）"
 echo ""
 echo "  2. 試試看這些指令："
-echo -e "     ${CYAN}/generate 一隻可愛的貓咪${NC}"
-echo -e "     ${CYAN}/nanobanana 幫我做一張早安圖${NC}"
+echo -e "     ${CYAN}/nanobanana:generate 一隻可愛的貓咪${NC}"
+echo -e "     ${CYAN}/nanobanana:nanobanana 幫我做一張早安圖${NC}"
 echo ""
 echo -e "${BOLD}可用指令：${NC}"
-echo "  /nanobanana  - 自然語言介面"
-echo "  /generate    - 生成圖片"
-echo "  /edit        - 編輯圖片"
-echo "  /restore     - 修復圖片"
-echo "  /icon        - 生成圖標"
-echo "  /pattern     - 生成圖案"
-echo "  /story       - 生成故事序列"
-echo "  /diagram     - 生成流程圖"
+echo "  /nanobanana:nanobanana  - 自然語言介面"
+echo "  /nanobanana:generate    - 生成圖片"
+echo "  /nanobanana:edit        - 編輯圖片"
+echo "  /nanobanana:restore     - 修復圖片"
+echo "  /nanobanana:icon        - 生成圖標"
+echo "  /nanobanana:pattern     - 生成圖案"
+echo "  /nanobanana:story       - 生成故事序列"
+echo "  /nanobanana:diagram     - 生成流程圖"
 echo ""
 echo -e "${BOLD}更多資訊：${NC}"
 echo "  GitHub: https://github.com/yazelin/nanobanana"
