@@ -199,11 +199,19 @@ claude
 
 ### macOS / Linux
 
+一鍵安裝的用戶：
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/yazelin/nanobanana/main/install.sh | bash -s -- --uninstall
+```
+
+如果本地有腳本檔案：
+
 ```bash
 ./install.sh --uninstall
 ```
 
-或手動：
+或手動移除：
 
 ```bash
 # 移除 MCP server
@@ -217,11 +225,21 @@ rm -rf ~/.claude/commands/nanobanana
 
 ### Windows
 
+先下載腳本再執行：
+
+```powershell
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/yazelin/nanobanana/main/install.ps1" -OutFile "install.ps1"
+.\install.ps1 -Uninstall
+Remove-Item install.ps1
+```
+
+如果本地有腳本檔案：
+
 ```powershell
 .\install.ps1 -Uninstall
 ```
 
-或手動：
+或手動移除：
 
 ```powershell
 # 移除 MCP server
