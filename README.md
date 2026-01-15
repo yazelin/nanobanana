@@ -156,6 +156,8 @@ claude
 /nanobanana:nanobanana 幫我做一個咖啡店的專業 logo
 ```
 
+**範例成果**：[生成圖片](https://github.com/yazelin/nanobanana/issues/1) | [故事序列](https://github.com/yazelin/nanobanana/issues/2) | [自然語言](https://github.com/yazelin/nanobanana/issues/3)
+
 ### 常用選項
 
 | 選項 | 說明 | 預設值 |
